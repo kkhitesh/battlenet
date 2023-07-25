@@ -1,16 +1,18 @@
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const nav = useNavigate();
+
   const loginUser = (e) => {
     e.preventDefault();
     if (username === "" || password === "")
       return toast.error("Please fill all the fields");
-    console.log("username", username, "password", password);
     axios
       .post("https://test.indusgame.com/logins", {
         username: username,
@@ -18,7 +20,6 @@ export const Login = () => {
       })
       .then(
         (response) => {
-          console.log(response);
           if (response.status == 200) {
             localStorage.setItem(
               "access_token",
@@ -29,7 +30,38 @@ export const Login = () => {
               response.data.auth.refreshToken
             );
             toast.success("Successfully logged in");
-            window.location.href = "/home";
+          }
+        },
+        (err) => {
+          const errmsg = err.response.data.reason;
+          toast.error(errmsg);
+        }
+      )
+      .then(() => {
+        nav("/");
+      });
+  };
+
+  const loginasGuest = (e) => {
+    e.preventDefault();
+    axios
+      .post("https://test.indusgame.com/logins", {
+        username: "hitesh.kowdiki",
+        password: "5rzr203fojWbhIBYhoZjeDl8VZ6U6aaP",
+      })
+      .then(
+        (response) => {
+          if (response.status == 200) {
+            localStorage.setItem(
+              "access_token",
+              response.data.auth.accessToken
+            );
+            localStorage.setItem(
+              "refresh_token",
+              response.data.auth.refreshToken
+            );
+            toast.success("Successfully logged in");
+            window.location.href = "/";
           }
         },
         (err) => {
@@ -80,6 +112,7 @@ export const Login = () => {
             <button
               type="button"
               className="bg-white px-4 py-3 w-[45%] rounded-md border-black border-2"
+              onClick={loginasGuest}
             >
               Guest
             </button>

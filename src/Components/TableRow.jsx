@@ -4,11 +4,18 @@ import { useState } from "react";
 export const TableRow = ({ unit }) => {
   const [isActive, setIsActive] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [health, setHealth] = useState(unit?.health);
+  // const [health, setHealth] = useState(unit?.health);
+  // const [attack, setAttack] = useState(unit?.attack);
+  // const [maxTargetCount, setMaxTargetCount] = useState(unit?.maxTargetCount);
+  // const [spawnCost, setSpawnCost] = useState(unit?.spawnCost);
+  // const [spawnCooldownInSeconds, setSpawnCooldownInSeconds] = useState(unit?.spawnCooldownInSeconds);
+  const [unitObj, setUnitObj] = useState(unit);
+
+  const [tempUnit, setTempUnit] = useState(unit);
 
   const getPill = (text) => {
-    let bgcolor = "green";
-    let textcolor = "white";
+    let bgcolor = "#dcfce7";
+    let textcolor = "#3f6212";
 
     if (text === "Common" || text === "Interceptor") {
       bgcolor = "#dbeafe";
@@ -32,6 +39,16 @@ export const TableRow = ({ unit }) => {
       </span>
     );
   };
+
+  const handleUpdate = () => {
+    setUnitObj(tempUnit);
+  };
+
+  const handleCancel = () => {
+    setTempUnit(unitObj);
+    setEdit(!edit);
+  };
+
   return (
     <>
       <tr
@@ -39,12 +56,12 @@ export const TableRow = ({ unit }) => {
           setEdit(false);
           setIsActive(!isActive);
         }}
-        className="cursor-pointer w-full text-center hover:bg-gray-200 border-2 border-gray-200"
+        className="flex cursor-pointer text-center w-full hover:bg-gray-200 border-2 border-gray-200 "
       >
-        <td className="p-3">{unit?.name}</td>
-        <td>{unit?.type}</td>
-        <td>{getPill(unit?.role)}</td>
-        <td>{unit?.faction}</td>
+        <td className="p-3 w-1/4">{unit?.name}</td>
+        <td className="p-3 w-1/4">{unit?.type}</td>
+        <td className="p-3 w-1/4">{getPill(unit?.role)}</td>
+        <td className="p-3 w-1/4">{unit?.faction}</td>
         {/* <td>+</td> */}
       </tr>
       {isActive && (
@@ -87,12 +104,14 @@ export const TableRow = ({ unit }) => {
                       type="text"
                       className="px-3 py-1 border-gray-300 border-2 rounded-lg w-full"
                       placeholder="Enter health"
-                      value={health}
-                      // onChange={(e) => setHealth(e.target.value)}
+                      value={tempUnit?.health}
+                      onChange={(e) =>
+                        setTempUnit({ ...tempUnit, health: e.target.value })
+                      }
                       pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
-                    <p>{health}</p>
+                    <p>{unitObj?.health}</p>
                   )}
                 </td>
                 <td className="p-3 bg-gray-200 rounded-lg border">
@@ -183,20 +202,30 @@ export const TableRow = ({ unit }) => {
             </tbody>
           </table>
           <div className="flex justify-end w-[73vw] gap-3 p-3">
-            <button
-              className={`${
-                edit
-                  ? "bg-red-500 hover:bg-red-700"
-                  : "bg-blue-500 hover:bg-blue-700"
-              } text-white font-bold py-2 px-4 rounded`}
-              onClick={() => setEdit(!edit)}
-            >
-              {edit ? "Cancel" : "Edit"}
-            </button>
-            {edit && (
-              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                Save
+            {!edit && (
+              <button
+                className="bg-blue-500 hover:bg-blue-700
+              text-white font-bold py-2 px-4 rounded"
+                onClick={() => setEdit(!edit)}
+              >
+                Edit
               </button>
+            )}
+            {edit && (
+              <>
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleUpdate}
+                >
+                  Save
+                </button>
+              </>
             )}
           </div>
         </>
