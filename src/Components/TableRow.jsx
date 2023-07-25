@@ -7,15 +7,26 @@ export const TableRow = ({ unit }) => {
   const [health, setHealth] = useState(unit?.health);
 
   const getPill = (text) => {
-    let color = "green";
-    console.log(text);
-    if (text === "Common") color = "blue";
-    if (text === "Rare") color = "purple";
-    if (text === "Epic") color = "orange";
-    console.log(color);
+    let bgcolor = "green";
+    let textcolor = "white";
+
+    if (text === "Common" || text === "Interceptor") {
+      bgcolor = "#dbeafe";
+      textcolor = "#1e40af";
+    }
+    if (text === "Rare" || text === "Tank") {
+      bgcolor = "#f3e8ff";
+      textcolor = "#6b21a8]";
+    }
+    if (text === "Epic" || text === "DPS") {
+      bgcolor = "#fed7aa";
+      textcolor = "#9a3412";
+    }
+
     return (
       <span
-        className={`bg-${color}-100 text-${color}-800 text-md font-medium mr-2 px-3 py-1 rounded-full`}
+        className={`text-md font-medium mr-2 px-3 py-1 rounded-full`}
+        style={{ backgroundColor: bgcolor, color: textcolor }}
       >
         {text}
       </span>
@@ -28,11 +39,11 @@ export const TableRow = ({ unit }) => {
           setEdit(false);
           setIsActive(!isActive);
         }}
-        className="cursor-pointer w-full text-center hover:bg-gray-200"
+        className="cursor-pointer w-full text-center hover:bg-gray-200 border-2 border-gray-200"
       >
         <td className="p-3">{unit?.name}</td>
         <td>{unit?.type}</td>
-        <td>{unit?.role}</td>
+        <td>{getPill(unit?.role)}</td>
         <td>{unit?.faction}</td>
         {/* <td>+</td> */}
       </tr>
