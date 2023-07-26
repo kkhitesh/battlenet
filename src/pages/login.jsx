@@ -30,6 +30,7 @@ export const Login = () => {
               response.data.auth.refreshToken
             );
             toast.success("Successfully logged in");
+            window.location.href = "/";
           }
         },
         (err) => {

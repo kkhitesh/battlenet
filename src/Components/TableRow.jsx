@@ -1,14 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import axiosInstance from "../axios";
+import axios from "axios";
 
 export const TableRow = ({ unit }) => {
   const [isActive, setIsActive] = useState(false);
   const [edit, setEdit] = useState(false);
-  // const [health, setHealth] = useState(unit?.health);
-  // const [attack, setAttack] = useState(unit?.attack);
-  // const [maxTargetCount, setMaxTargetCount] = useState(unit?.maxTargetCount);
-  // const [spawnCost, setSpawnCost] = useState(unit?.spawnCost);
-  // const [spawnCooldownInSeconds, setSpawnCooldownInSeconds] = useState(unit?.spawnCooldownInSeconds);
   const [unitObj, setUnitObj] = useState(unit);
 
   const [tempUnit, setTempUnit] = useState(unit);
@@ -41,7 +38,35 @@ export const TableRow = ({ unit }) => {
   };
 
   const handleUpdate = () => {
-    setUnitObj(tempUnit);
+    axiosInstance
+      .patch(`/units/${unitObj?.id}`, tempUnit)
+      .then((res) => {
+        console.log(res.data);
+        setUnitObj(res.data);
+        console.log(unitObj);
+        setEdit(!edit);
+      })
+      .catch(() => {
+        console.log("refreshing token");
+        axios
+          .post("https://test.indusgame.com/auths", {
+            refreshToken: localStorage.getItem("refresh_token"),
+          })
+          .then((res) => {
+            console.log("success");
+            if (res.status == 200) {
+              localStorage.setItem("access_token", res.data.accessToken);
+              localStorage.setItem("refresh_token", res.data.refreshToken);
+              window.location.href = "/";
+            }
+          })
+          .catch((e) => {
+            console.log("error", e);
+            // localStorage.removeItem("access_token");
+            // localStorage.removeItem("refresh_token");
+            window.location.href = "/login";
+          });
+      });
   };
 
   const handleCancel = () => {
@@ -88,7 +113,13 @@ export const TableRow = ({ unit }) => {
                 <td className="p-3 bg-gray-200 rounded-lg border">
                   <h1 className="text-lg font-bold ">Quality</h1>
                   {edit ? (
-                    <select className="px-3 py-2 border-gray-300 border-2 rounded-lg w-full">
+                    <select
+                      className="px-3 py-2 border-gray-300 border-2 rounded-lg w-full"
+                      value={tempUnit?.quality}
+                      onChange={(e) =>
+                        setTempUnit({ ...tempUnit, quality: e.target.value })
+                      }
+                    >
                       <option value="Common">Common</option>
                       <option value="Rare">Rare</option>
                       <option value="Epic">Epic</option>
@@ -121,8 +152,10 @@ export const TableRow = ({ unit }) => {
                       type="text"
                       className="px-3 py-1 border-gray-300 border-2 rounded-lg w-full"
                       placeholder="Enter attack"
-                      // value={unit?.attack}
-                      // onChange={(e) => setHealth(e.target.value)}
+                      value={tempUnit?.attack}
+                      onChange={(e) => {
+                        setTempUnit({ ...tempUnit, attack: e.target.value });
+                      }}
                       pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
@@ -160,8 +193,13 @@ export const TableRow = ({ unit }) => {
                       type="text"
                       className="px-3 py-1 border-gray-300 border-2 rounded-lg w-full"
                       placeholder="Enter max target count"
-                      // value={unit?.attack}
-                      // onChange={(e) => setHealth(e.target.value)}
+                      value={tempUnit?.maxTargetCount}
+                      onChange={(e) =>
+                        setTempUnit({
+                          ...tempUnit,
+                          maxTargetCount: e.target.value,
+                        })
+                      }
                       pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
@@ -175,8 +213,10 @@ export const TableRow = ({ unit }) => {
                       type="text"
                       className="px-3 py-1 border-gray-300 border-2 rounded-lg w-full"
                       placeholder="Enter spawn cost"
-                      // value={unit?.attack}
-                      // onChange={(e) => setHealth(e.target.value)}
+                      value={tempUnit?.spawnCost}
+                      onChange={(e) => {
+                        setTempUnit({ ...tempUnit, spawnCost: e.target.value });
+                      }}
                       pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
@@ -190,8 +230,13 @@ export const TableRow = ({ unit }) => {
                       type="text"
                       className="px-3 py-1 border-gray-300 border-2 rounded-lg w-full"
                       placeholder="Enter spawn cooldown"
-                      // value={unit?.attack}
-                      // onChange={(e) => setHealth(e.target.value)}
+                      value={tempUnit?.spawnCooldownInSeconds}
+                      onChange={(e) =>
+                        setTempUnit({
+                          ...tempUnit,
+                          spawnCooldownInSeconds: e.target.value,
+                        })
+                      }
                       pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
