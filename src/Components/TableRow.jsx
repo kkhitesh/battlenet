@@ -43,7 +43,6 @@ export const TableRow = ({ unit }) => {
       .then((res) => {
         console.log(res.data);
         setUnitObj(res.data);
-        console.log(unitObj);
         setEdit(!edit);
       })
       .catch(() => {
@@ -139,7 +138,6 @@ export const TableRow = ({ unit }) => {
                       onChange={(e) =>
                         setTempUnit({ ...tempUnit, health: e.target.value })
                       }
-                      pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
                     <p>{unitObj?.health}</p>
@@ -156,10 +154,9 @@ export const TableRow = ({ unit }) => {
                       onChange={(e) => {
                         setTempUnit({ ...tempUnit, attack: e.target.value });
                       }}
-                      pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
-                    <p>{unit?.attack}</p>
+                    <p>{unitObj?.attack}</p>
                   )}
                 </td>
               </tr>
@@ -200,10 +197,9 @@ export const TableRow = ({ unit }) => {
                           maxTargetCount: e.target.value,
                         })
                       }
-                      pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
-                    <p>{unit?.maxTargetCount}</p>
+                    <p>{unitObj?.maxTargetCount}</p>
                   )}
                 </td>
                 <td className="p-3 bg-gray-200 rounded-lg border">
@@ -217,10 +213,9 @@ export const TableRow = ({ unit }) => {
                       onChange={(e) => {
                         setTempUnit({ ...tempUnit, spawnCost: e.target.value });
                       }}
-                      pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
-                    <p>{unit?.spawnCost}</p>
+                    <p>{unitObj?.spawnCost}</p>
                   )}
                 </td>
                 <td className="p-3 bg-gray-200 rounded-lg border">
@@ -237,10 +232,9 @@ export const TableRow = ({ unit }) => {
                           spawnCooldownInSeconds: e.target.value,
                         })
                       }
-                      pattern="^(?!.*\.\.)[a-z](?:[\w.]{3,18}[a-z])?$"
                     />
                   ) : (
-                    <p>{unit?.spawnCooldownInSeconds}</p>
+                    <p>{unitObj?.spawnCooldownInSeconds}</p>
                   )}
                 </td>
               </tr>
